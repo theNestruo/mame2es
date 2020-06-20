@@ -23,9 +23,11 @@ usage: java -jar mame2es.jar
   -marqueesuffix <arg>  Emulation Station gamelist.xml <marquee> tag suffix (optional)
 ```
 
-## Compile
+## Compiling
 
-Resource `data/mame64-0.220/listxml.xml` is not present in the repository because iti s huge (241.205.820 bytes). Re-create it using MAME CLI: `mame64.exe -listxml > listxml.xml`
+`mvn package`
+
+Please note that the resource `data/mame64-0.220/listxml.xml` is not under source control because it is huge (241.205.820 bytes); re-create it using MAME CLI: `mame64.exe -listxml > listxml.xml`
 
 ---
 
