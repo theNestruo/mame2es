@@ -75,6 +75,7 @@ public class GameListXmlWriter {
 //					final String year = game.getYear(); // (not used)
 					final String manufacturer = game.getManufacturer();
 					final String players = game.getPlayers();
+					final String genre = game.getCategory();
 
 					writer.write(String.format("\t\t<name>%s</name>", name));
 					writer.newLine();
@@ -90,6 +91,10 @@ public class GameListXmlWriter {
 					}
 					if (StringUtils.isNotBlank(players)) {
 						writer.write(String.format("\t\t<players>%s</players>", players));
+						writer.newLine();
+					}
+					if (StringUtils.isNotBlank(genre)) {
+						writer.write(String.format("\t\t<genre>%s</genre>", genre));
 						writer.newLine();
 					}
 				}

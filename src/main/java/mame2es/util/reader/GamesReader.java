@@ -15,12 +15,15 @@ import mame2es.util.parser.emulationstation.MameBiosesParser;
 import mame2es.util.parser.emulationstation.MameDevicesParser;
 import mame2es.util.parser.mame.GameListParser;
 import mame2es.util.parser.mame.ListXmlParser;
+import mame2es.util.parser.progettosnaps.CatListParser;
 
 public class GamesReader {
 
 	private InputStreamSource gamelist = new ClassPathResource("data/arcade64-0.220/gamelist.txt");
 
 	private InputStreamSource listxml = new ClassPathResource("data/mame64-0.220/listxml.xml");
+
+	private InputStreamSource catlist = new ClassPathResource("data/catver-0.221/catlist.ini");
 
 	private InputStreamSource mamebioses = new ClassPathResource("data/emulationstation/mamebioses.xml");
 
@@ -33,6 +36,11 @@ public class GamesReader {
 
 	public GamesReader withListxml(final InputStreamSource listxml) {
 		this.listxml = listxml;
+		return this;
+	}
+
+	public GamesReader withCatlist(final InputStreamSource catlist) {
+		this.catlist = catlist;
 		return this;
 	}
 
@@ -58,6 +66,8 @@ public class GamesReader {
 		}
 
 		new ListXmlParser(this.listxml).readFor(games);
+
+		new CatListParser(this.catlist).readFor(games);
 
 		return Collections.unmodifiableMap(games);
 	}

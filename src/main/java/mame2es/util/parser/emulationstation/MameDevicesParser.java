@@ -16,7 +16,7 @@ import org.springframework.util.Assert;
  */
 public class MameDevicesParser {
 
-	private static final Pattern REGEX = Pattern.compile("<device>(.*?)</device>");
+	private final Pattern regex = Pattern.compile("<device>(.*?)</device>");
 
 	private final InputStreamSource source;
 
@@ -34,7 +34,7 @@ public class MameDevicesParser {
 
 			return IOUtils.readLines(is, StandardCharsets.UTF_8)
 					.stream()
-					.map(line -> REGEX.matcher(line))
+					.map(line -> this.regex.matcher(line))
 					.filter(matcher -> matcher.matches())
 					.map(matcher -> matcher.group(1))
 					.collect(Collectors.toSet());

@@ -3,6 +3,7 @@ package mame2es;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -13,10 +14,12 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.FileSystemResource;
 
 import mame2es.model.Game;
 import mame2es.util.reader.GamesReader;
+import mame2es.util.writer.emulationstation.CollectionWriter;
 import mame2es.util.writer.emulationstation.GameListXmlWriter;
 import mame2es.util.writer.emulationstation.MameNamesWriter;
 
@@ -24,6 +27,7 @@ public class Mame2EsApp {
 
 	private static final String IN_GAMELIST = "gamelist";
 	private static final String IN_LISTXML = "listxml";
+	private static final String IN_CATLIST = "catlist";
 	private static final String IN_MAMEBIOSES = "mamebioses";
 	private static final String IN_MAMEDEVICES = "mamedevices";
 	private static final String OUT_MAMENAMES = "mamenames";
@@ -34,12 +38,15 @@ public class Mame2EsApp {
 	private static final String IMAGESUFFIX = "imagesuffix";
 	private static final String MARQUEEPREFIX = "marqueeprefix";
 	private static final String MARQUEESUFFIX = "marqueesuffix";
+	private static final String OUT_COLLECTIONS = "collectionsout";
+	private static final String DIR_COLLECTIONS = "collectionsdir";
 
 	public static void main(final String[] args) throws Exception {
 
 		final Options options = new Options();
 		options.addOption(IN_GAMELIST, true, "MAME gamelist.txt input file (optional)");
 		options.addOption(IN_LISTXML, true, "MAME --listxml input file (optional)");
+		options.addOption(IN_CATLIST, true, "progettoSNAPS.net MAME CATVER.ini input file (optional)");
 		options.addOption(IN_MAMEBIOSES, true, "Emulation Station resources/mamebioses.xml input file (optional)");
 		options.addOption(IN_MAMEDEVICES, true, "Emulation Station resources/mamedevices.xml input file (optional)");
 		options.addOption(OUT_MAMENAMES, true, "Emulation Station resources/mamenames.xml output file");
@@ -50,17 +57,18 @@ public class Mame2EsApp {
 		options.addOption(IMAGESUFFIX, true, "Emulation Station gamelist.xml <image> tag suffix (optional)");
 		options.addOption(MARQUEEPREFIX, true, "Emulation Station gamelist.xml <marquee> tag prefix (optional)");
 		options.addOption(MARQUEESUFFIX, true, "Emulation Station gamelist.xml <marquee> tag suffix (optional)");
+		options.addOption(OUT_COLLECTIONS, true, "Emulation Station custom collections output directory");
+		options.addOption(DIR_COLLECTIONS, true, "Directory for filtering Emulation Station custom collections output files");
 		final CommandLine command = new DefaultParser().parse(options, args);
 		if (command.getOptions().length == 0) {
 			// (prints in proper order)
 			final HelpFormatter helpFormatter = new HelpFormatter();
-			try (PrintWriter pw = new PrintWriter(System.out)) {
-				helpFormatter.printUsage(pw, 114, "java -jar mame2es.jar");
-				for (final Option option : options.getOptions()) {
-					helpFormatter.printOptions(pw, 114, new Options().addOption(option), 2, 4);
-				}
+			final PrintWriter pw = new PrintWriter(System.out);
+			helpFormatter.printUsage(pw, 114, "java -jar mame2es.jar");
+			for (final Option option : options.getOptions()) {
+				helpFormatter.printOptions(pw, 114, new Options().addOption(option), 2, 4);
 			}
-			return;
+			pw.flush();
 		}
 
 		//
@@ -68,6 +76,7 @@ public class Mame2EsApp {
 		final Map<String, Game> games = readGames(command);
 		writeMameNames(command, games);
 		writeGameList(command, games);
+		writeCustomCollections(command, games);
 	}
 
 	private static Map<String, Game> readGames(final CommandLine command) throws IOException {
@@ -80,6 +89,10 @@ public class Mame2EsApp {
 
 		if (command.hasOption(IN_LISTXML)) {
 			gamesReader.withListxml(new FileSystemResource(command.getOptionValue(IN_LISTXML)));
+		}
+
+		if (command.hasOption(IN_CATLIST)) {
+			gamesReader.withCatlist(new FileSystemResource(command.getOptionValue(IN_CATLIST)));
 		}
 
 		if (command.hasOption(IN_MAMEBIOSES)) {
@@ -127,7 +140,7 @@ public class Mame2EsApp {
 		}
 
 		if (!command.hasOption(DIR_GAMELIST)) {
-			System.out.printf("Invalid %s option\n", DIR_GAMELIST, gamelist.getAbsolutePath());
+			System.out.printf("Invalid %s option\n", DIR_GAMELIST);
 			return false;
 		}
 
@@ -138,8 +151,8 @@ public class Mame2EsApp {
 		}
 
 		final Set<String> filenames = new LinkedHashSet<>();
-		for (final File file : FileUtils.listFiles(dir, null, false)) {
-			filenames.add(file.getName());
+		for (final File file : FileUtils.listFiles(dir, null, true)) {
+			filenames.add(StringUtils.removeStart(file.getAbsolutePath(), dir.getAbsolutePath()));
 		}
 		if (filenames.isEmpty()) {
 			System.out.printf("Invalid %s option: No files found in %s\n", DIR_GAMELIST, dir.getAbsolutePath());
@@ -154,6 +167,39 @@ public class Mame2EsApp {
 				command.getOptionValue(MARQUEEPREFIX, "~/.emulationstation/art/marquees/"),
 				command.getOptionValue(MARQUEESUFFIX, ".png")).write(filenames, games);
 		System.out.printf("%s written\n", gamelist.getAbsolutePath());
+		return true;
+	}
+
+	private static boolean writeCustomCollections(final CommandLine command, final Map<String, Game> games) throws IOException {
+
+		if (!command.hasOption(OUT_COLLECTIONS)) {
+			return false;
+		}
+
+		final File outputDir = new File(command.getOptionValue(OUT_COLLECTIONS));
+		if (!outputDir.isDirectory()) {
+			System.out.printf("Invalid %s option: %s is not a directory\n", DIR_GAMELIST, outputDir.getAbsolutePath());
+			return false;
+		}
+
+		if (!command.hasOption(DIR_COLLECTIONS)) {
+			System.out.printf("Invalid %s option\n", DIR_COLLECTIONS);
+			return false;
+		}
+
+		final File dir = new File(command.getOptionValue(DIR_COLLECTIONS));
+		if (!dir.isDirectory()) {
+			System.out.printf("Invalid %s option: %s is not a directory\n", DIR_COLLECTIONS, dir.getAbsolutePath());
+			return false;
+		}
+
+		final Collection<File> files = FileUtils.listFiles(dir, null, true);
+		if (files.isEmpty()) {
+			System.out.printf("Invalid %s option: No files found in %s\n", DIR_COLLECTIONS, dir.getAbsolutePath());
+			return false;
+		}
+
+		new CollectionWriter(outputDir).write(files, games);
 		return true;
 	}
 

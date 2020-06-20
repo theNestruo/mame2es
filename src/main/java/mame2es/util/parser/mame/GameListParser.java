@@ -21,7 +21,7 @@ import mame2es.model.Game;
  */
 public class GameListParser {
 
-	private static final Pattern REGEX = Pattern.compile("^(\\S+)\\s+\"(.+)\"$");
+	private final Pattern regex = Pattern.compile("^(\\S+)\\s+\"(.+)\"$");
 
 	private final InputStreamSource source;
 
@@ -44,7 +44,7 @@ public class GameListParser {
 
 			return IOUtils.readLines(is, StandardCharsets.UTF_8)
 					.stream()
-					.map(line -> REGEX.matcher(line))
+					.map(line -> this.regex.matcher(line))
 					.filter(matcher -> matcher.matches())
 					.map(matcher -> new Game(matcher.group(1), matcher.group(2)))
 					.filter(game -> !(StringUtils.contains(game.getRomName(), '_') && ignored.contains(game.getRomName())))

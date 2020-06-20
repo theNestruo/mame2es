@@ -19,6 +19,8 @@ public class Game {
 
 	private String players;
 
+	private String category;
+
 	public Game(final String romName, final String longDescription) {
 		super();
 
@@ -42,10 +44,10 @@ public class Game {
 	 */
 	public String getShortTitle() {
 
-		final String title = this.getTitle();
-		return StringUtils.startsWithAny(title, ARTICLES)
-				? StringUtils.substringAfter(title, " ") + ", " + StringUtils.substringBefore(title, " ")
-				: title;
+		final String shortTitle = StringUtils.substringBefore(this.getTitle(), " /");
+		return StringUtils.startsWithAny(shortTitle, ARTICLES)
+				? StringUtils.substringAfter(shortTitle, " ") + ", " + StringUtils.substringBefore(shortTitle, " ")
+				: shortTitle;
 	}
 
 	/**
@@ -94,5 +96,13 @@ public class Game {
 
 	public void setPlayers(final String players) {
 		this.players = players;
+	}
+
+	public String getCategory() {
+		return this.category;
+	}
+
+	public void setCategory(final String category) {
+		this.category = category;
 	}
 }
