@@ -1,7 +1,7 @@
 package mame2es.model;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.Assert;
+import org.apache.commons.lang3.Validate;
 
 public class Game {
 
@@ -24,8 +24,8 @@ public class Game {
 	public Game(final String romName, final String longDescription) {
 		super();
 
-		Assert.hasText(romName, "The romName must not be null or blank");
-		Assert.hasText(longDescription, "The longDescription must not be null or blank");
+		Validate.notBlank(romName, "The romName must not be null or blank");
+		Validate.notBlank(longDescription, "The longDescription must not be null or blank");
 
 		this.romName = romName;
 		this.description = longDescription;

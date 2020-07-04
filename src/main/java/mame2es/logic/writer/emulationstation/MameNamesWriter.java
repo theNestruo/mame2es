@@ -1,4 +1,4 @@
-package mame2es.util.writer.emulationstation;
+package mame2es.logic.writer.emulationstation;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,7 +8,7 @@ import java.util.Collection;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.Assert;
+import org.apache.commons.lang3.Validate;
 
 import mame2es.model.Game;
 
@@ -17,6 +17,8 @@ import mame2es.model.Game;
  */
 public class MameNamesWriter {
 
+	public static final String FILENAME = "mamenames.xml";
+
 	private final String xmlPattern = "<game><mamename>%s</mamename><realname>%s</realname></game>";
 
 	private final File file;
@@ -24,7 +26,7 @@ public class MameNamesWriter {
 	public MameNamesWriter(final File file) {
 		super();
 
-		Assert.notNull(file, "The file must not be null");
+		Validate.notNull(file, "The file must not be null");
 
 		this.file = file;
 	}
