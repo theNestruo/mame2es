@@ -10,7 +10,23 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<mainClass>mame2es.Mame2EsApp</mainClass>
+
+		<commons-cli.version>1.4</commons-cli.version>
+		<commons-lang3.version>3.10</commons-lang3.version>
+		<commons-io.version>2.7</commons-io.version>
+		<logback.version>1.2.3</logback.version>
+
+		<maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
+		<extra-enforcer-rules.version>1.2</extra-enforcer-rules.version>
+		<maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+		<versions-maven-plugin.version>2.7</versions-maven-plugin.version>
+		<modernizer-maven-plugin.version>2.1.0</modernizer-maven-plugin.version>
+		<spotbugs-maven-plugin.version>4.0.4</spotbugs-maven-plugin.version>
+		<spotbugs.version>4.0.6</spotbugs.version>
 	</properties>
 
 	<dependencies>
@@ -19,24 +35,24 @@
 		<dependency>
 			<groupId>commons-cli</groupId>
 			<artifactId>commons-cli</artifactId>
-			<version>1.4</version>
+			<version>${commons-cli.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.10</version>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.7</version>
+			<version>${commons-io.version}</version>
 		</dependency>
 
 		<!-- Logback (classic module) -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.3</version>
+			<version>${logback.version}</version>
 		</dependency>
 
 	</dependencies>
@@ -46,15 +62,46 @@
 
 		<plugins>
 
+			<!-- Enforces certain Maven versions -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>${maven-enforcer-plugin.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>extra-enforcer-rules</artifactId>
+						<version>${extra-enforcer-rules.version}</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>3.2.5</version>
+								</requireMavenVersion>
+								<enforceBytecodeVersion>
+									<maxJdkVersion>${maven.compiler.target}</maxJdkVersion>
+								</enforceBytecodeVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<!-- Package the artifact in an uber-jar, including its dependencies -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
+				<version>${maven-shade-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>shade</id>
-						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
 						</goals>
@@ -74,7 +121,7 @@
 								</transformer>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer" />
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>mame2es.Mame2EsApp</mainClass>
+									<mainClass>${mainClass}</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>
@@ -86,13 +133,20 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
-				<version>2.7</version>
+				<version>${versions-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>display-dependency-updates</id>
 						<phase>verify</phase>
 						<goals>
 							<goal>display-dependency-updates</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>display-plugin-updates</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>display-plugin-updates</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -102,7 +156,7 @@
 			<plugin>
 				<groupId>org.gaul</groupId>
 				<artifactId>modernizer-maven-plugin</artifactId>
-				<version>2.1.0</version>
+				<version>${modernizer-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>modernizer</id>
@@ -111,7 +165,7 @@
 							<goal>modernizer</goal>
 						</goals>
 						<configuration>
-							<javaVersion>${maven.compiler.source}</javaVersion>
+							<javaVersion>${maven.compiler.target}</javaVersion>
 						</configuration>
 					</execution>
 				</executions>
@@ -121,12 +175,12 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.0.4</version>
+				<version>${spotbugs-maven-plugin.version}</version>
 				<dependencies>
 					<dependency>
 						<groupId>com.github.spotbugs</groupId>
 						<artifactId>spotbugs</artifactId>
-						<version>4.0.6</version>
+						<version>${spotbugs.version}</version>
 					</dependency>
 				</dependencies>
   				<executions>
