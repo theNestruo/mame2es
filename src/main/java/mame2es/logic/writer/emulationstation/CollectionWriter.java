@@ -24,18 +24,16 @@ import mame2es.model.Game;
  */
 public class CollectionWriter {
 
+	private static final String FILENAME_PATTERN = "custom-%s.cfg";
+
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final File dir;
 
-	private final String filenamePattern = "custom-%s.cfg";
-
 	public CollectionWriter(final File dir) {
 		super();
 
-		Validate.notNull(dir, "The dir must not be null");
-
-		this.dir = dir;
+		this.dir = Validate.notNull(dir, "The dir must not be null");
 	}
 
 	public void write(final Collection<CurrentGame> currentGames) throws IOException {
@@ -54,7 +52,7 @@ public class CollectionWriter {
 		}
 
 		for (final Entry<CustomCollection, Collection<String>> entry : customCollections.entrySet()) {
-			final File file = new File(this.dir, String.format(this.filenamePattern, entry.getKey().toString()));
+			final File file = new File(this.dir, String.format(FILENAME_PATTERN, entry.getKey().toString()));
 			FileUtils.writeLines(file, entry.getValue(), true);
 			logger.info("Emulation Station collections/custom-collection.cfg output file written to {}", file.getAbsolutePath());
 		}

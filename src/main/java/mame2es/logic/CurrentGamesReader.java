@@ -25,9 +25,7 @@ public class CurrentGamesReader {
 	public CurrentGamesReader(final Map<String, Game> games) {
 		super();
 
-		Validate.notNull(games, "The games must not be null");
-
-		this.games = games;
+		this.games = Validate.notNull(games, "The games must not be null");
 	}
 
 	public Collection<CurrentGame> read(final File dir) throws IOException {

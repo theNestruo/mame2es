@@ -2,7 +2,9 @@ package mame2es;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 
@@ -35,20 +37,8 @@ public class Mame2EsApp {
 
 	public static void main(final String[] args) throws Exception {
 
-		// Options
-		final Options options = new Options();
-		options.addOption(HELP, "Shows usage");
-		options.addOption(VERBOSE, "Verbose execution");
-		options.addOption(INPUT_DIR, true, "Input directory (optional; to generate gamelist.xml and custom-collections.cfg)");
-		options.addOption(OUTPUT_DIR, true, "Output directory (optional; current directory by default)");
-		for (final Option option : GamesReaderCommandLineAdapter.options().getOptions()) {
-			options.addOption(option);
-		}
-		for (final Option option : GameListXmlWriterCommandLineAdapter.options().getOptions()) {
-			options.addOption(option);
-		}
-
 		// Parses the command line
+		final Options options = options();
 		final CommandLine command = new DefaultParser().parse(options, args);
 
 		// Main options
@@ -68,6 +58,22 @@ public class Mame2EsApp {
 		writeGameListAndCustomCollections(command, games);
 	}
 
+	private static Options options() {
+
+		final Options options = new Options();
+		options.addOption(HELP, "Shows usage");
+		options.addOption(VERBOSE, "Verbose execution");
+		options.addOption(INPUT_DIR, true, "Input directory (optional; to generate gamelist.xml and custom-collections.cfg)");
+		options.addOption(OUTPUT_DIR, true, "Output directory (optional; current directory by default)");
+		for (final Option option : GamesReaderCommandLineAdapter.options().getOptions()) {
+			options.addOption(option);
+		}
+		for (final Option option : GameListXmlWriterCommandLineAdapter.options().getOptions()) {
+			options.addOption(option);
+		}
+		return options;
+	}
+
 	private static boolean showUsage(final CommandLine command, final Options options) {
 
 		if (!command.hasOption(HELP)) {
@@ -76,7 +82,7 @@ public class Mame2EsApp {
 
 		// (prints in proper order)
 		final HelpFormatter helpFormatter = new HelpFormatter();
-		final PrintWriter pw = new PrintWriter(System.out);
+		final PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.ISO_8859_1));
 		helpFormatter.printUsage(pw, 114, "java -jar mame2es.jar");
 		for (final Option option : options.getOptions()) {
 			helpFormatter.printOptions(pw, 114, new Options().addOption(option), 2, 4);

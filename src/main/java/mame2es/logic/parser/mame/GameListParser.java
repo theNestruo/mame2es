@@ -28,9 +28,7 @@ public class GameListParser {
 	public GameListParser(final ReadableResource source) {
 		super();
 
-		Validate.notNull(source, "The source must not be null");
-
-		this.source = source;
+		this.source = Validate.notNull(source, "The source must not be null");
 	}
 
 	public List<Game> get() throws IOException {

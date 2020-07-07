@@ -5,7 +5,7 @@
 
 	<groupId>mame2es</groupId>
 	<artifactId>mame2es</artifactId>
-	<version>1</version>
+	<version>1.1</version>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -42,29 +42,107 @@
 	</dependencies>
 
 	<build>
+		<finalName>${project.artifactId}</finalName>
+
 		<plugins>
 
+			<!-- Package the artifact in an uber-jar, including its dependencies -->
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.4</version>
 				<executions>
 					<execution>
-						<id>jar-with-dependencies</id>
+						<id>shade</id>
 						<phase>package</phase>
 						<goals>
-							<goal>single</goal>
+							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<finalName>mame2es</finalName>
-							<appendAssemblyId>false</appendAssemblyId>
-							<archive>
-								<manifest>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+								<filters>
+									<filter>
+										<artifact>*:*</artifact>
+										<excludes>
+											<exclude>META-INF/MANIFEST.MF</exclude>
+										</excludes>
+									</filter>
+								</filters>
+								<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer">
+									<addHeader>false</addHeader>
+								</transformer>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer" />
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>mame2es.Mame2EsApp</mainClass>
-								</manifest>
-							</archive>
-							<descriptorRefs>
-								<descriptorRef>jar-with-dependencies</descriptorRef>
-							</descriptorRefs>
+								</transformer>
+							</transformers>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Displays all dependencies that have newer versions available -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>display-dependency-updates</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>display-dependency-updates</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Detects uses of legacy APIs which modern Java versions supersede -->
+			<plugin>
+				<groupId>org.gaul</groupId>
+				<artifactId>modernizer-maven-plugin</artifactId>
+				<version>2.1.0</version>
+				<executions>
+					<execution>
+						<id>modernizer</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>modernizer</goal>
+						</goals>
+						<configuration>
+							<javaVersion>${maven.compiler.source}</javaVersion>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Find bugs in Java programs -->
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.0.4</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.github.spotbugs</groupId>
+						<artifactId>spotbugs</artifactId>
+						<version>4.0.6</version>
+					</dependency>
+				</dependencies>
+  				<executions>
+					<execution>
+						<id>spotbugs-spotbugs</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>spotbugs</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>spotbugs-check</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>

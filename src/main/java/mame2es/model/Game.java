@@ -24,11 +24,8 @@ public class Game {
 	public Game(final String romName, final String longDescription) {
 		super();
 
-		Validate.notBlank(romName, "The romName must not be null or blank");
-		Validate.notBlank(longDescription, "The longDescription must not be null or blank");
-
-		this.romName = romName;
-		this.description = longDescription;
+		this.romName = Validate.notBlank(romName, "The romName must not be null or blank");
+		this.description = Validate.notBlank(longDescription, "The longDescription must not be null or blank");
 	}
 
 	/**

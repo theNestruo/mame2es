@@ -16,13 +16,9 @@ public class CurrentGame {
 	public CurrentGame(final Game game, final File dir, final File file) {
 		super();
 
-		Validate.notNull(game, "The game must not be null");
-		Validate.notNull(dir, "The dir must not be null");
-		Validate.notNull(file, "The file must not be null");
-
-		this.game = game;
-		this.dir = dir;
-		this.file = file;
+		this.game = Validate.notNull(game, "The game must not be null");
+		this.dir = Validate.notNull(dir, "The dir must not be null");
+		this.file = Validate.notNull(file, "The file must not be null");
 	}
 
 	public String getAbsolutePath() {

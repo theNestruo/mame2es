@@ -2,12 +2,13 @@ package mame2es.logic.writer.emulationstation;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
@@ -42,24 +43,17 @@ public class GameListXmlWriter {
 			final String marqueeSuffix) {
 		super();
 
-		Validate.notNull(file, "The file must not be null");
-		Validate.notBlank(pathPrefix, "The pathPrefix must not be null nor blank");
-		Validate.notBlank(imagePrefix, "The imagePrefix must not be null nor blank");
-		Validate.notBlank(imageSuffix, "The imageSuffix must not be null nor blank");
-		Validate.notBlank(marqueePrefix, "The marqueePrefix must not be null nor blank");
-		Validate.notBlank(marqueeSuffix, "The marqueeSuffix must not be null nor blank");
-
-		this.file = file;
-		this.pathPrefix = pathPrefix;
-		this.imagePrefix = imagePrefix;
-		this.imageSuffix = imageSuffix;
-		this.marqueePrefix = marqueePrefix;
-		this.marqueeSuffix = marqueeSuffix;
+		this.file = Validate.notNull(file, "The file must not be null");
+		this.pathPrefix = Validate.notBlank(pathPrefix, "The pathPrefix must not be null nor blank");
+		this.imagePrefix = Validate.notBlank(imagePrefix, "The imagePrefix must not be null nor blank");
+		this.imageSuffix = Validate.notBlank(imageSuffix, "The imageSuffix must not be null nor blank");
+		this.marqueePrefix = Validate.notBlank(marqueePrefix, "The marqueePrefix must not be null nor blank");
+		this.marqueeSuffix = Validate.notBlank(marqueeSuffix, "The marqueeSuffix must not be null nor blank");
 	}
 
 	public void write(final Collection<CurrentGame> currentGames) throws IOException {
 
-		try (final BufferedWriter writer = IOUtils.buffer(new FileWriter(this.file))) {
+		try (final BufferedWriter writer = IOUtils.buffer(new FileWriterWithEncoding(this.file, StandardCharsets.UTF_8))) {
 			writer.write("<?xml version=\"1.0\"?>");
 			writer.newLine();
 

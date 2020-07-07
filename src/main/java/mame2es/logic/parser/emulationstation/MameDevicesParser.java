@@ -24,9 +24,7 @@ public class MameDevicesParser {
 	public MameDevicesParser(final ReadableResource source) {
 		super();
 
-		Validate.notNull(source, "The source must not be null");
-
-		this.source = source;
+		this.source = Validate.notNull(source, "The source must not be null");
 	}
 
 	public Set<String> get() throws IOException {

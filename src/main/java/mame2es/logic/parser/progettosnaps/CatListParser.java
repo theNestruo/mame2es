@@ -27,9 +27,7 @@ public class CatListParser {
 	public CatListParser(final ReadableResource source) {
 		super();
 
-		Validate.notNull(source, "The source must not be null");
-
-		this.source = source;
+		this.source = Validate.notNull(source, "The source must not be null");
 	}
 
 	public int readFor(final Map<String, Game> games) throws IOException {
