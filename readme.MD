@@ -1,4 +1,5 @@
 ![Java CI with Maven](https://github.com/theNestruo/mame2es/workflows/Java%20CI%20with%20Maven/badge.svg)
+[![CodeFactor](https://www.codefactor.io/repository/github/thenestruo/mame2es/badge/master)](https://www.codefactor.io/repository/github/thenestruo/mame2es/overview/master)
 
 # mame2es
 Quick, dirty, and offline [Emulation Station](https://github.com/jrassa/EmulationStation) files generator from [MAME](https://github.com/mamedev/mame) data files.
