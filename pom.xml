@@ -21,7 +21,7 @@
 		<logback.version>1.2.3</logback.version>
 
 		<maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
-		<extra-enforcer-rules.version>1.2</extra-enforcer-rules.version>
+		<extra-enforcer-rules.version>1.3</extra-enforcer-rules.version>
 		<maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
 		<versions-maven-plugin.version>2.7</versions-maven-plugin.version>
 		<modernizer-maven-plugin.version>2.1.0</modernizer-maven-plugin.version>
@@ -62,7 +62,7 @@
 
 		<plugins>
 
-			<!-- Enforces certain Maven versions -->
+			<!-- Enforces certain Maven versions and dependencies bytecode version -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
@@ -129,7 +129,7 @@
 				</executions>
 			</plugin>
 
-			<!-- Displays all dependencies that have newer versions available -->
+			<!-- Displays all dependencies and plugins that have newer versions available -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
