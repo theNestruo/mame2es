@@ -1,4 +1,4 @@
-![Java CI with Maven](https://github.com/theNestruo/mame2es/workflows/Java%20CI%20with%20Maven/badge.svg)
+[![Java CI with Maven](https://github.com/theNestruo/mame2es/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/theNestruo/mame2es/actions)
 [![CodeFactor](https://www.codefactor.io/repository/github/thenestruo/mame2es/badge/master)](https://www.codefactor.io/repository/github/thenestruo/mame2es/overview/master)
 
 # mame2es
