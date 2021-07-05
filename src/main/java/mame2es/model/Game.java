@@ -21,11 +21,29 @@ public class Game {
 
 	private String category;
 
+	/**
+	 * Constructor
+	 */
 	public Game(final String romName, final String longDescription) {
 		super();
 
 		this.romName = Validate.notBlank(romName, "The romName must not be null or blank");
 		this.description = Validate.notBlank(longDescription, "The longDescription must not be null or blank");
+	}
+
+	/**
+	 * Copy constructor
+	 */
+	public Game(final Game that) {
+		super();
+
+		this.romName = that.romName;
+		this.description = that.description;
+		this.cloneOf = that.cloneOf;
+		this.year = that.year;
+		this.manufacturer = that.manufacturer;
+		this.players = that.players;
+		this.category = that.category;
 	}
 
 	/**

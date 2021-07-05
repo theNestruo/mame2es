@@ -30,6 +30,6 @@ public class CurrentGame {
 	}
 
 	public Game getGame() {
-		return game;
+		return new Game(game);
 	}
 }
