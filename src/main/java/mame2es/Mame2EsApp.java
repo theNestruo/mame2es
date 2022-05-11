@@ -13,6 +13,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,7 @@ public class Mame2EsApp {
 
 	private static final Logger logger = LoggerFactory.getLogger(Mame2EsApp.class);
 
-	public static void main(final String[] args) throws Exception {
+	public static void main(final String[] args) throws ParseException, IOException {
 
 		// Parses the command line
 		final Options options = options();
