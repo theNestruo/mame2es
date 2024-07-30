@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 
-import mame2es.util.ReadableResource;
+import com.github.thenestruo.util.ReadableResource;
 
 /**
  * Parses a Emulation Station {@code resources/mamedevices.xml} file

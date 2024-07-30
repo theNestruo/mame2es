@@ -3,7 +3,7 @@ package mame2es.logic;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 
-import mame2es.util.FileSystemResource;
+import com.github.thenestruo.util.FileSystemResource;
 
 /**
  * Apache Commons CLI {@link CommandLine} adapter for {@link GamesReader}

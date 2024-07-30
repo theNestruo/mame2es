@@ -17,8 +17,8 @@ import mame2es.logic.parser.mame.GameListParser;
 import mame2es.logic.parser.mame.ListXmlParser;
 import mame2es.logic.parser.progettosnaps.CatListParser;
 import mame2es.model.Game;
-import mame2es.util.ClassPathResource;
-import mame2es.util.ReadableResource;
+import com.github.thenestruo.util.ClassPathResource;
+import com.github.thenestruo.util.ReadableResource;
 
 /**
  * Convenience wrapper for MAME, progettoSNAPS.net MAME, and Emulation Station parsers

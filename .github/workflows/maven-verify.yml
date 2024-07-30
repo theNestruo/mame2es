@@ -1,0 +1,26 @@
+name: Verify
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Setup Maven
+      uses: s4u/setup-maven-action@v1.14.0
+      with:
+        settings-servers: |
+          [{
+            "id": "github-thenestruo-parent",
+            "username": "theNestruo",
+            "password": "${{ secrets.THENESTRUO_PARENT_PASSWORD }}"
+          }]
+
+    - name: Verify
+      run: mvn --batch-mode verify
